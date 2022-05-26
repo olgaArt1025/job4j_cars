@@ -10,12 +10,13 @@ create table if not exists car(
 );
 
 create table if not exists driver (
-       id serial primary key,
-       name varchar(50) not null
-    );
+    id serial primary key,
+    name varchar(50) not null
+);
 
 create table history_owner(
-       id serial primary key,
-       driver_id int not null references driver(id),
-       car_id int not null references car(id)
+    id serial primary key,
+    driver_id int not null references driver(id),
+    car_id int not null references car(id)
 );
+
