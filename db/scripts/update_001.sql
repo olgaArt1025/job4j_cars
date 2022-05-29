@@ -6,7 +6,7 @@ create table if not exists engine(
 create table if not exists car(
      id serial primary key,
      model varchar(50) not null,
-     engine_id int not null unique references engine(id)
+     engine_id int not null references engine(id)
 );
 
 create table if not exists driver (

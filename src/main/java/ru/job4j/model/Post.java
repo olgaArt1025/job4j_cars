@@ -1,6 +1,7 @@
 package ru.job4j.model;
 
 import javax.persistence.*;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
 
@@ -25,16 +26,20 @@ public class Post {
 
     private boolean sale;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date created;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    public static Post of(Model model, Body body, String description, boolean sale, User user) {
+    public static Post of(Model model, Body body, String description, boolean sale, Date created, User user) {
         Post post = new Post();
         post.model = model;
         post.body = body;
         post.description = description;
         post.sale = sale;
+        post.created = created;
         post.user = user;
         return post;
     }
@@ -95,6 +100,14 @@ public class Post {
         this.user = user;
     }
 
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -110,5 +123,19 @@ public class Post {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Post{"
+                + "id=" + id
+                + ", model=" + model
+                + ", body=" + body
+                + ", description='" + description + '\''
+                + ", photo=" + Arrays.toString(photo)
+                + ", sale=" + sale
+                + ", created=" + created
+                + ", user=" + user
+                + '}';
     }
 }

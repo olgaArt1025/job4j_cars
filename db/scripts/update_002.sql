@@ -10,11 +10,12 @@ create table if not exists model(
 
 create table if not exists posts(
     id serial primary key,
-    model_id int not null unique references model(id),
-    body_id int not null unique references body(id),
+    model_id int not null references model(id),
+    body_id int not null references body(id),
     description TEXT not null,
     photo bytea null,
-    sale boolean
+    sale boolean,
+    created  TIMESTAMP
     );
 
 create table if not exists users(
