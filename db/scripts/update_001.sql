@@ -1,6 +1,6 @@
 create table if not exists engine(
     id serial primary key,
-    power int not null
+    power float not null
 );
 
 create table if not exists car(

@@ -4,17 +4,17 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "model")
-public class Model {
+@Table(name = "brand")
+public class Brand {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
 
-    public static Model of(String name) {
-        Model model = new Model();
-        model.name = name;
-        return model;
+    public static Brand of(String name) {
+        Brand brand = new Brand();
+        brand.name = name;
+        return brand;
     }
 
     public int getId() {
@@ -41,8 +41,8 @@ public class Model {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Model model = (Model) o;
-        return id == model.id;
+        Brand brand = (Brand) o;
+        return id == brand.id;
     }
 
     @Override

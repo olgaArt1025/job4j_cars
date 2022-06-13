@@ -3,8 +3,8 @@ package ru.job4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import ru.job4j.model.Model;
-import ru.job4j.model.Post;
+import ru.job4j.model.Brand;
+import ru.job4j.model.Item;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.function.Function;
@@ -17,32 +17,34 @@ public class AdRepository {
         this.sf = sf;
     }
 
-    public List<Post> adsForToday() {
+    public List<Item> adsForToday() {
         return this.tx(
                 session -> session.createQuery(
-                                "select p from Post p where p.created >= current_date ", Post.class)
+                                "select p from Item p where p.created >= current_date ", Item.class)
                         .list()
         );
     }
 
-    public List<Post> adsForPhotos() {
+    public List<Item> adsForPhotos() {
         return this.tx(
                 session -> session.createQuery(
-                                "select p from Post p where p.photo != null", Post.class)
+                                "select p from Item p where p.photo != null", Item.class)
                         .list()
         );
     }
 
-    public List<Post> adsFromTheBrand(Model model) {
+
+    public List<Item> adsFromTheBrand(Brand brand) {
         return this.tx(
                 session -> session.createQuery(
-                        "select distinct st from Post st "
-                                + "join fetch st.model a "
-                                + "where a.id = :sId", Post.class)
-                        .setParameter("sId", model.getId())
+                        "select distinct st from Item st "
+                                + "join fetch st.brand a "
+                                + "where a.id = :sId", Item.class)
+                        .setParameter("sId", brand.getId())
                         .list()
         );
     }
+
 
     private <T> T tx(final Function<Session, T> command) {
         final Session session = sf.openSession();
