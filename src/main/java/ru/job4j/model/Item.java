@@ -1,24 +1,33 @@
 package ru.job4j.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
 
 @Entity
-@Table(name = "posts")
-public class Post {
+@Table(name = "items")
+public class Item implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @ManyToOne
-    @JoinColumn(name = "model_id", foreignKey = @ForeignKey(name = "MODEL_ID_FK"))
-    private Model model;
+    @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "CATEGORY_ID_FK"))
+    private Category category;
+
+    @ManyToOne
+    @JoinColumn(name = "brand_id", foreignKey = @ForeignKey(name = "BRAND_ID_FK"))
+    private Brand brand;
 
     @ManyToOne
     @JoinColumn(name = "body_id", foreignKey = @ForeignKey(name = "BODY_ID_FK"))
     private Body body;
+
+    private int year;
+
+    private int price;
 
     private String description;
 
@@ -33,15 +42,19 @@ public class Post {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public static Post of(Model model, Body body, String description, boolean sale, Date created, User user) {
-        Post post = new Post();
-        post.model = model;
-        post.body = body;
-        post.description = description;
-        post.sale = sale;
-        post.created = created;
-        post.user = user;
-        return post;
+    public static Item of(Category category, Brand brand, Body body, String description, int year,
+                          int price, boolean sale, Date created, User user) {
+        Item item = new Item();
+        item.category = category;
+        item.brand = brand;
+        item.body = body;
+        item.year = year;
+        item.price = price;
+        item.description = description;
+        item.sale = sale;
+        item.created = created;
+        item.user = user;
+        return item;
     }
 
     public int getId() {
@@ -52,12 +65,20 @@ public class Post {
         this.id = id;
     }
 
-    public Model getModel() {
-        return model;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setModel(Model model) {
-        this.model = model;
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public Brand getBrand() {
+        return brand;
+    }
+
+    public void setBrand(Brand brand) {
+        this.brand = brand;
     }
 
     public Body getBody() {
@@ -66,6 +87,22 @@ public class Post {
 
     public void setBody(Body body) {
         this.body = body;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
     }
 
     public String getDescription() {
@@ -92,20 +129,20 @@ public class Post {
         this.sale = sale;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public Date getCreated() {
         return created;
     }
 
     public void setCreated(Date created) {
         this.created = created;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override
@@ -116,7 +153,7 @@ public class Post {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Post post = (Post) o;
+        Item post = (Item) o;
         return id == post.id;
     }
 
@@ -127,10 +164,12 @@ public class Post {
 
     @Override
     public String toString() {
-        return "Post{"
+        return "Item{"
                 + "id=" + id
-                + ", model=" + model
+                + ", category=" + category
+                + ", brand=" + brand
                 + ", body=" + body
+                + ", year=" + year
                 + ", description='" + description + '\''
                 + ", photo=" + Arrays.toString(photo)
                 + ", sale=" + sale

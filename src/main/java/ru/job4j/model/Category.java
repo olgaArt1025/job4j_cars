@@ -1,38 +1,23 @@
 package ru.job4j.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "categories")
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     private String name;
 
-    private String password;
-
-    public User() {
-    }
-
-    public User(int id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    public User(int id, String name, String password) {
-        this.id = id;
-        this.name = name;
-        this.password = password;
-    }
-
-    public static User of(String name, String password) {
-        User user = new User();
-        user.name = name;
-        user.password = password;
-        return user;
+    public static Category of(String name) {
+        Category category = new Category();
+        category.name = name;
+        return category;
     }
 
     public int getId() {
@@ -51,14 +36,6 @@ public class User {
         this.name = name;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -67,8 +44,8 @@ public class User {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        User user = (User) o;
-        return id == user.id;
+        Category category = (Category) o;
+        return Objects.equals(id, category.id);
     }
 
     @Override

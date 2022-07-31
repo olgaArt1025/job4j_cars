@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
+
+    <title>CAR</title>
+</head>
+<body>
+<div class="container">
+    <a class="nav-item nav-link" th:if="${user.name == 'Гость'}" th:href="@{/loginPage}">
+        <span th:text="${user.name}"></span>
+        <span> | Войти</span>
+    </a>
+    <a class="nav-item nav-link" th:if="${user.name != 'Гость'}" th:href="@{/logout}">
+        <span th:text="${user.name}"></span>
+        <span> | Выйти</span>
+    </a>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Детали объявления</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link active" th:href="@{/index}">Главная <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" th:href="@{/items}">Все объявления</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container pt-3">
+        <div class="row ml-4">
+            <div class="card" style="width: 800px">
+                <div class="card-header">
+                    <td>
+                        <div style="text-align: left;color:#4786fa;" class="col-10"><b><span th:if="*{item.isSale == true}">Продается</span></b>
+                        </div>
+                        <div style="text-align: left;color:#f31313;" class="col-10"><b><span th:if="*{item.isSale != true}">Продано</span></b>
+                        </div>
+                    </td>
+                </div>
+    <div class="row mb-3 mt-3 mr-3 border-bottom">
+        <div class="col-3 mb-3"><img class="img-thumbnail" th:src="@{|/photoCar/${item.id}|}"
+                                     width="170px" height="115px"></div>
+        <div class="col-5">
+            <div class="row mb-3">
+                <div class="col-5">Цена</div>
+                <div class="col-7"><span th:text="*{item.price} + ' руб.'"></span></div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-5">Год выпуска</div>
+                <div class="col-7"><span th:text="*{item.year}"></span></div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-5">Марка</div>
+                <div class="col-7"><span th:text="*{item.brand}"></span></div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-5">Кузов</div>
+                <div class="col-7"><span th:text="*{item.body}"></span></div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-5">Дата создания</div>
+                <div class="col-7"><span th:text="${#dates.format(item.created, 'dd.MM.yyyy')}"></span></div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3 mt-3 mx-3">
+        <span><b>Описание</b></span>
+    </div>
+    <div class="row pb-3 mb-3 mt-3 mx-3 border-bottom">
+        <span th:text="${item.description}"></span>
+    </div>
+    <span th:if="${user.name != 'Гость' && user.name == item.getUser().getName()}">
+        <form>
+            <button type="submit" class="btn btn-outline-primary" th:formaction="@{|/formUpdateItem/${item.id}|}">изменить</button>
+            <button type="submit" class="btn btn-outline-danger" th:formaction="@{|/delete/${item.id}|}">удалить</button>
+        </form>
+        </span>
+            </div>
+        </div>
+    </div>
+ </tbody>
+</div>
+</body>
+</html>
