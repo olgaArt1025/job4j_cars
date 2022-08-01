@@ -1,22 +1,20 @@
 package ru.job4j.store;
 
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.springframework.stereotype.Repository;
 import ru.job4j.model.Item;
 
 import java.util.Date;
 import java.util.List;
-import java.util.function.Function;
 
 @Repository
-public class ItemStore {
+public class ItemStore implements Store {
     private final SessionFactory sf;
 
     public ItemStore(SessionFactory sf) {
         this.sf = sf;
     }
+
     public Item add(Item item) {
         return this.tx(
                 session -> {
@@ -24,7 +22,8 @@ public class ItemStore {
                     item.setSale(true);
                     session.save(item);
                     return item;
-                }
+                },
+                sf
         );
     }
 
@@ -35,7 +34,8 @@ public class ItemStore {
                     item.setCreated(new Date());
                     session.update(item);
                     return null;
-                }
+                },
+                sf
         );
     }
 
@@ -46,25 +46,22 @@ public class ItemStore {
                     ads.setId(id);
                     session.delete(ads);
                     return null;
-                }
+                },
+                sf
         );
     }
 
     public List<Item> findAll() {
         return this.tx(
-                session -> {
-                    final List result = session.createQuery("from Item").list();
-                    return result;
-                }
+                session -> session.createQuery("from Item").list(),
+                sf
         );
     }
 
     public Item findById(int id) {
         return this.tx(
-                session -> {
-                    final Item result = session.get(Item.class, id);
-                    return result;
-                }
+                session -> session.get(Item.class, id),
+                sf
         );
     }
 
@@ -75,7 +72,8 @@ public class ItemStore {
                                         + "join fetch i.brand b "
                                         + "where b.id = :sId", Item.class)
                         .setParameter("sId", brandId)
-                        .list()
+                        .list(),
+                sf
         );
     }
 
@@ -85,7 +83,8 @@ public class ItemStore {
                                 + " join fetch i.body "
                                 + "where i.body.id= :cBody")
                         .setParameter("cBody", bodyId)
-                        .list()
+                        .list(),
+                sf
 
         );
     }
@@ -96,23 +95,8 @@ public class ItemStore {
                                 + " join fetch i.category "
                                 + "where i.category.id= :cCategory")
                         .setParameter("cCategory", categoryId)
-                        .list()
-
+                        .list(),
+                sf
         );
-    }
-
-    private <T> T tx(final Function<Session, T> command) {
-        final Session session = sf.openSession();
-        final Transaction tx = session.beginTransaction();
-        try {
-            T rsl = command.apply(session);
-            tx.commit();
-            return rsl;
-        } catch (final Exception e) {
-            session.getTransaction().rollback();
-            throw e;
-        } finally {
-            session.close();
-        }
     }
 }

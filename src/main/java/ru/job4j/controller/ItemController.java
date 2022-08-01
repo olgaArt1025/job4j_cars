@@ -28,15 +28,9 @@ public class ItemController {
         this.carService = carService;
     }
 
-
     @GetMapping("/items")
     public String ads(Model model, HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        if (user == null) {
-            user = new User();
-            user.setName("Гость");
-        }
-        model.addAttribute("user", user);
+        findUser(model, session);
         model.addAttribute("items", service.findAll());
         model.addAttribute("bodies", carService.findAllBody());
         model.addAttribute("brands", carService.findAllBrand());
@@ -46,45 +40,30 @@ public class ItemController {
 
     @GetMapping("/items/brand/{brandId}")
     public String itemBrand(Model model, @PathVariable("brandId") int brandId, HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        if (user == null) {
-            user = new User();
-            user.setName("Гость");
-        }
+        findUser(model, session);
         model.addAttribute("brands", carService.findAllBrand());
         model.addAttribute("bodies", carService.findAllBody());
         model.addAttribute("categories", carService.findAllCategory());
-        model.addAttribute("user", user);
         model.addAttribute("items", service.findByBrand(brandId));
         return "items";
     }
 
     @GetMapping("/items/body/{bodyId}")
     public String itemBody(Model model, @PathVariable("bodyId") int bodyId, HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        if (user == null) {
-            user = new User();
-            user.setName("Гость");
-        }
+        findUser(model, session);
         model.addAttribute("brands", carService.findAllBrand());
         model.addAttribute("bodies", carService.findAllBody());
         model.addAttribute("categories", carService.findAllCategory());
-        model.addAttribute("user", user);
         model.addAttribute("items", service.findByBody(bodyId));
         return "items";
     }
 
     @GetMapping("/items/category/{categoryId}")
     public String itemCategory(Model model, @PathVariable("categoryId") int categoryId, HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        if (user == null) {
-            user = new User();
-            user.setName("Гость");
-        }
+        findUser(model, session);
         model.addAttribute("brands", carService.findAllBrand());
         model.addAttribute("bodies", carService.findAllBody());
         model.addAttribute("categories", carService.findAllCategory());
-        model.addAttribute("user", user);
         model.addAttribute("items", service.findByCategory(categoryId));
         return "items";
     }
@@ -126,12 +105,7 @@ public class ItemController {
 
     @GetMapping("/itemDetails/{itemId}")
     public String itemDetails(Model model, @PathVariable("itemId") int id, HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        if (user == null) {
-            user = new User();
-            user.setName("Гость");
-        }
-        model.addAttribute("user", user);
+        findUser(model, session);
         model.addAttribute("item", service.findById(id));
         return "itemDetails";
     }
@@ -150,6 +124,15 @@ public class ItemController {
                 .contentLength(item.getPhoto().length)
                 .contentType(MediaType.parseMediaType("application/octet-stream"))
                 .body(new ByteArrayResource(item.getPhoto()));
+    }
+
+    public void findUser(Model model, HttpSession session) {
+    User user = (User) session.getAttribute("user");
+        if (user == null) {
+        user = new User();
+        user.setName("Гость");
+    }
+      model.addAttribute("user", user);
     }
 }
 
